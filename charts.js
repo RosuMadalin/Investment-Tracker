@@ -74,20 +74,13 @@ async function refreshCharts(range = "1wk") { // range poate fi: '1d', '5d', '1m
     }
 }
 
-// Fetch Historical Data from RapidAPI
+// Fetch Historical Data via the RapidAPI proxy (API key is kept server-side, see BUG-002)
 async function fetchHistoricalData(symbol, range = "1wk") {
-    const url = `https://yahoo-finance166.p.rapidapi.com/api/stock/get-chart?region=US&range=${range}&symbol=${symbol}&interval=5m`;
-    const options = {
-        method: "GET",
-        headers: {
-            "x-rapidapi-key": "e960172fe6mshf730d03cde873bap107f3ejsn71fcee0222d5",
-            // "x-rapidapi-key": "ff417b8d15msh68777dca49c569fp1386b1jsnc8e8c7944038",
-            "x-rapidapi-host": "yahoo-finance166.p.rapidapi.com"
-        }
-    };
+    // old key, no longer used: ff417b8d15APIKey
+    const url = `https://investment-tracker-proxy.madalinrosu.workers.dev/api/stock/get-chart?region=US&range=${range}&symbol=${symbol}&interval=5m`;
 
     try {
-        const response = await fetch(url, options);
+        const response = await fetch(url);
         const data = await response.json();
 
         if (!data.chart?.result?.[0]) {
@@ -201,7 +194,7 @@ function showChart(symbol, chartData) {
 //         fetch(`https://yahoo-finance166.p.rapidapi.com/api/stock/get-chart?region=US&range=1d&symbol=${symbol}&interval=5m`, {
 //             method: "GET",
 //             headers: {
-//                 "x-rapidapi-key": "8f461caa94mshd535b0ab8ca78adp10e742jsn92a44733b8d2",
+//                 "x-rapidapi-key": "8f461caa94APIKey",
 //                 "x-rapidapi-host": "yahoo-finance166.p.rapidapi.com"
 //             }
 //         })

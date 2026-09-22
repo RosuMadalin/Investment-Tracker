@@ -35,10 +35,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
   
-  // FETCH NEWS
+  // FETCH NEWS via the RapidAPI proxy (API key is kept server-side, see BUG-002)
   async function fetchStockMarketNews(symbolQuery, range = "1d") {
-    const apiKey = 'e960172fe6mshf730d03cde873bap107f3ejsn71fcee0222d5';  // Replace with your actual RapidAPI key
-    const url = `https://yahoo-finance166.p.rapidapi.com/api/news/list-by-symbol?s=${symbolQuery}&region=US&snippetCount=500`;  
+    const url = `https://investment-tracker-proxy.madalinrosu.workers.dev/api/news/list-by-symbol?s=${symbolQuery}&region=US&snippetCount=500`;
     // Check if news data exists in localStorage
     const cachedNews = localStorage.getItem("stockNews");
     const now = new Date().getTime();
@@ -55,13 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   
     try {
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'X-RapidAPI-Key': apiKey,
-          'X-RapidAPI-Host': 'yahoo-finance166.p.rapidapi.com',
-        },
-      });
+      const response = await fetch(url);
   
       if (!response.ok) {
         throw new Error('Failed to fetch data');

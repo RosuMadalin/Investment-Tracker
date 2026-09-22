@@ -68,20 +68,13 @@ async function saveSymbolToFirestore(symbol) {
   }
 }
 
-// Validate stock symbol using RapidAPI
+// Validate stock symbol via the RapidAPI proxy (API key is kept server-side, see BUG-002)
 async function validateStockSymbol(symbol) {
-  const url = `https://yahoo-finance166.p.rapidapi.com/api/stock/get-price?region=US&symbol=${symbol}`;
-  const options = {
-    method: "GET",
-    headers: {
-      "x-rapidapi-key": "e960172fe6mshf730d03cde873bap107f3ejsn71fcee0222d5",
-      // "x-rapidapi-key": "ff417b8d15msh68777dca49c569fp1386b1jsnc8e8c7944038",
-      "x-rapidapi-host": "yahoo-finance166.p.rapidapi.com",
-    },
-  };
+  // old key, no longer used: ff417b8d15APIKey
+  const url = `https://investment-tracker-proxy.madalinrosu.workers.dev/api/stock/get-price?region=US&symbol=${symbol}`;
 
   try {
-    const response = await fetch(url, options);
+    const response = await fetch(url);
     // Check if the response is successful
     if (!response.ok) {
       console.error(`API Error: ${response.status}`);
@@ -226,20 +219,12 @@ function getDataFromStorage(symbol, result) {
 //     });
 // }
 
-// Fetch live stock price from RapidAPI and save to Firestore
+// Fetch live stock price via the RapidAPI proxy and save to Firestore
 async function fetchStockPrice(symbol, result) {
-  var url = `https://yahoo-finance166.p.rapidapi.com/api/stock/get-price?region=US&symbol=${symbol}`;
-
-  const options = {
-    method: "GET",
-    headers: {
-      "x-rapidapi-key": "e960172fe6mshf730d03cde873bap107f3ejsn71fcee0222d5",
-      "x-rapidapi-host": "yahoo-finance166.p.rapidapi.com",
-    },
-  };
+  var url = `https://investment-tracker-proxy.madalinrosu.workers.dev/api/stock/get-price?region=US&symbol=${symbol}`;
 
   try {
-    const response = await fetch(url, options);
+    const response = await fetch(url);
     const data = await response.json();
     // console.log(data);
     const price = await data.quoteSummary.result[0].price.regularMarketPrice.raw;
